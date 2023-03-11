@@ -1,0 +1,39 @@
+<div style="background-color:#143a4e; padding: 10px; display: flex; align-items: center;">
+  <div style="display: flex; align-items: center; width: 33%;">
+    <i class="material-icons" style="color: #ffffff; margin-right: 5px;">event_note</i>
+    <p style="color: #ffffff; font-size: 16px; font-weight: bold;">Data: <span id="data" style="color: #ffffff;"></span></p>
+  </div>
+  <div style="display: flex; align-items: center; width: 33%;">
+    <i class="material-icons" style="color: #ffffff; margin-right: 5px;">event</i>
+    <p style="color: #ffffff; font-size: 16px; font-weight: bold;">Semana: CW<span id="semana" style="color: #ffffff;"></span></p>
+  </div>
+  <div style="display: flex; align-items: center; width: 33%;">
+    <i class="material-icons" style="color: #ffffff; margin-right: 5px;">schedule</i>
+    <p style="color: #ffffff; font-size: 16px; font-weight: bold;">Hora: <span id="hora" style="color: #ffffff;"></span></p>
+  </div>
+</div>
+
+<!-- Importar os ícones do Material Design Icons -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<script>
+function updateDateTime() {
+    let data = new Date();
+    let dataFormatada = data.toLocaleDateString();
+    let horaFormatada = data.toLocaleTimeString();
+    let semanaAno = Math.ceil((((data - new Date(data.getFullYear(),0,1)) / 86400000) + 1)/7);
+    document.getElementById("data").innerHTML = dataFormatada;
+    document.getElementById("hora").innerHTML = horaFormatada;
+    document.getElementById("semana").innerHTML = semanaAno;
+}
+
+// atualiza hora a cada segundo
+setInterval(function(){
+    updateDateTime();
+}, 1000);
+
+// atualiza data e semana uma vez ao dia
+setInterval(function() {
+    updateDateTime();
+}, 86400000); // 1 dia em milissegundos
+</script>
