@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Calendário Interativo</title>
+	<head>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f5f5f5;
+		}
+
+		#calendario {
+			width: 500px;
+			height: 500px;
+			border: 1px solid #ccc;
+			display: flex;
+			flex-wrap: wrap;
+			background-color: #fff;
+			padding: 20px;
+			box-sizing: border-box;
+		}
+
+		#calendario div {
+			width: 14.28%;
+			height: 80px;
+			border: 1px solid #ccc;
+			box-sizing: border-box;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+		}
+
+		#calendario .dia {
+			background-color: #fff;
+		}
+
+		#calendario .hoje {
+			background-color: #ffdab9;
+		}
+
+		#calendario .selecionado {
+			background-color: #ffa07a;
+			color: #fff;
+		}
+
+		#barra-superior {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			height: 50px;
+			width: 500px;
+			background-color: #ffa07a;
+			padding: 0 20px;
+			box-sizing: border-box;
+			font-size: 24px;
+			font-weight: bold;
+			color: #fff;
+		}
+
+		#barra-superior button {
+			background-color: #fff;
+			border: none;
+			padding: 10px;
+			font-size: 18px;
+			border-radius: 5px;
+			cursor: pointer;
+			color: #ffa07a;
+			font-weight: bold;
+			transition: all 0.3s ease-in-out;
+		}
+
+		#barra-superior button:hover {
+			background-color: #ffa07a;
+			color: #fff;
+		}
+
+		#data-atual {
+			font-size: 20px;
+		}
+
+		.mes-anterior, .mes-proximo {
+			color: #fff;
+			font-size: 18px;
+			font-weight: bold;
+			cursor: pointer;
+			transition: all 0.3s ease-in-out;
+			margin: 0 10px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background-color: transparent;
+			border: none;
+			outline: none;
+		}
+
+		.mes-anterior:hover, .mes-proximo:hover {
+			background-color: #fff;
+			color: #ffa07a;
+		}
+
+		.mes-anterior::before, .mes-proximo::after {
+			content: "";
+			display: inline-block;
+			width: 10px;
+			height: 10px;
+			border-top: 2px solid currentColor;
+			border-right: 2px solid currentColor;
+			transform: rotate(-45deg);
+			margin-right: 5px;
+		}
+
+		.mes-proximo::before, .mes-anterior::after {
+			content: "";
+			display: inline-block;
+			width: 10px;
+			height: 10px;
+			border-top: 2px solid currentColor;}
+
+		</style>
+		</head>
+			<body>
+				<div id="barra-superior">
+					<button id="botao-anterior">&lt;</button>
+					<div id="data-atual"></div>
+					<button id="botao-proximo">&gt;</button>
+				</div>
+				<div id="calendario"></div>
+				<script>
+					var calendario = document.getElementById("calendario");
+					var dataAtual = new Date();
+					var diaAtual = dataAtual.getDate();
+					var mesAtual = dataAtual.getMonth();
+					var anoAtual = dataAtual.getFullYear();
+					var meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+					var dias = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
+					var dataAtualElement = document.getElementById("data-atual");
+					var botaoAnterior = document.getElementById("botao-anterior");
+					var botaoProximo = document.getElementById("botao-proximo");
+			
+					function atualizaDataAtual() {
+						dataAtualElement.innerHTML = meses[mesAtual] + " " + anoAtual;
+					}
+			
+					function criaCalendario(mes, ano) {
+						
+			
+						calendario.innerHTML = "";
+			
+						var data = new Date(ano, mes, 1);
+						var primeiroDiaSemana = data.getDay();
+			
+						var diasMes = new Date(ano, mes + 1, 0).getDate();
+			
+						for (var i = 0; i < dias.length; i++) {
+							var diaSemana = document.createElement("div");
+							diaSemana.innerHTML = dias[i];
+							calendario.appendChild(diaSemana);
+						}
+			
+						for (var i = 0; i < primeiroDiaSemana; i++) {
+							var diaVazio = document.createElement("div");
+							calendario.appendChild(diaVazio);
+					}
+			
+					for (var i = 1; i <= diasMes; i++) {
+						var dia = document.createElement("div");
+						dia.innerHTML = i;
+						if (i === diaAtual && mes === mesAtual && ano === anoAtual) {
+							dia.classList.add("hoje");
+						}
+						dia.classList.add("dia");
+						calendario.appendChild(dia);
+					}
+			
+					var diasRestantes = 7 - calendario.children.length % 7;
+					if (diasRestantes < 7) {
+						for (var i = 0; i < diasRestantes; i++) {
+							var diaVazio = document.createElement("div");
+							calendario.appendChild(diaVazio);
+						}
+					}
+				}
+			
+				function atualizaCalendario() {
+					criaCalendario(mesAtual, anoAtual);
+					atualizaDataAtual();
+				}
+			
+				function proximoMes() {
+					mesAtual++;
+					if (mesAtual > 11) {
+						mesAtual = 0;
+						anoAtual++;
+					}
+					atualizaCalendario();
+				}
+			
+				function mesAnterior() {
+					mesAtual--;
+					if (mesAtual < 0) {
+						mesAtual = 11;
+						anoAtual--;
+					}
+					atualizaCalendario();
+				}
+			
+				atualizaCalendario();
+			
+				botaoProximo.addEventListener("click", proximoMes);
+				botaoAnterior.addEventListener("click", mesAnterior);
+			</script>
+			</body>
+			</html>
